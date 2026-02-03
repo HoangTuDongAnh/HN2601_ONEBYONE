@@ -36,7 +36,7 @@ namespace _Game.Scripts.Grid
         {
             if (isMatched) return;
             
-            //GridManager.Instance.OnNodeClicked(this);
+            GridManager.Instance.OnNodeClicked(this);
         }
 
         public void SetSelected(bool isSelected)
