@@ -2,7 +2,8 @@
 using UnityEngine;
 using _Game.Scripts.Grid;
 using _Game.Scripts.ScriptableObjects;
-using _Game.Scripts.Systems; // Thêm namespace Systems
+using _Game.Scripts.Systems;
+using _Game.Scripts.UI; // Thêm namespace Systems
 
 namespace _Game.Scripts.Core
 {
@@ -14,11 +15,16 @@ namespace _Game.Scripts.Core
         public ThemeData currentTheme;
         public List<LevelData> levels;
 
+        [Header("Game Settings")] 
+        public int initialShuffleCount = 3;
+        public int bonusShuffleOnWin = 1;
+
         [Header("Game State")]
         public bool isPlaying = false;
         public int currentLevelIndex = 0;
         public float timeRemaining;
         public int totalScore;
+        public int currentShuffleCount;
         public int pairsRemaining;
 
         private void Awake()
@@ -28,6 +34,18 @@ namespace _Game.Scripts.Core
 
         private void Start()
         {
+            StartNewGame();
+        }
+
+        public void StartNewGame()
+        {
+            totalScore = 0;
+            currentLevelIndex = 0;
+            currentShuffleCount = initialShuffleCount;
+            
+            UIManager.Instance.UpdateScoreUI(totalScore);
+            UIManager.Instance.UpdateShuffleUI(currentShuffleCount);
+            
             StartLevel(currentLevelIndex);
         }
 
@@ -35,7 +53,6 @@ namespace _Game.Scripts.Core
         {
             if (isPlaying)
             {
-                // Trừ thời gian
                 timeRemaining -= Time.deltaTime;
 
                 if (timeRemaining <= 0)
@@ -60,9 +77,9 @@ namespace _Game.Scripts.Core
             timeRemaining = data.timeLimit;
             pairsRemaining = (data.rows * data.columns) / 2;
             isPlaying = true;
-            
-            // Gọi GridManager tạo map
+
             GridManager.Instance.InitializeLevel(data, currentTheme);
+            UIManager.Instance.UpdateLevelUI(currentLevelIndex);
             
             Debug.Log($"Bắt đầu Level {index + 1}. Mục tiêu: {pairsRemaining} cặp.");
         }
@@ -70,10 +87,26 @@ namespace _Game.Scripts.Core
         public void AddScore(int amount)
         {
             totalScore += amount;
-            // (Sau này sẽ gọi UI update điểm ở đây)
+            UIManager.Instance.UpdateScoreUI(totalScore);
         }
-
-        // Hàm được gọi từ GridManager khi ăn thành công 1 cặp
+        
+        public bool TryConsumeAutoShuffle()
+        {
+            if (currentShuffleCount > 0)
+            {
+                currentShuffleCount--;
+                UIManager.Instance.UpdateShuffleUI(currentShuffleCount);
+                Debug.Log($"Đã dùng 1 lượt Shuffle cứu thua. Còn lại: {currentShuffleCount}");
+                return true;
+            }
+            else
+            {
+                Debug.Log("Hết lượt Shuffle cứu thua -> Game Over!");
+                GameOver();
+                return false;
+            }
+        }
+        
         public void OnPairMatched()
         {
             // 1. Gọi Combo
@@ -92,9 +125,11 @@ namespace _Game.Scripts.Core
         private void LevelComplete()
         {
             isPlaying = false;
-            Debug.Log("VICTORY! Đang chuyển màn...");
             
-            // Tạm thời chuyển màn luôn sau 2 giây (sau này sẽ hiện bảng Victory UI)
+            currentShuffleCount += bonusShuffleOnWin;
+            UIManager.Instance.UpdateShuffleUI(currentShuffleCount);
+            Debug.Log($"Qua màn! Thưởng {bonusShuffleOnWin} lượt Shuffle.");
+
             Invoke(nameof(NextLevel), 2.0f);
         }
 

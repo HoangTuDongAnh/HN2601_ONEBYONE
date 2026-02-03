@@ -62,13 +62,22 @@ namespace _Game.Scripts.Grid
             }
 
             grid = new Node[columns, rows];
+            
+            Vector3 centerOffset = new Vector3(
+                -(columns * cellSize) / 2.0f + cellSize / 2,
+                -(rows * cellSize) / 2.0f + cellSize / 2,
+                0
+            );
+            
+            Vector3 startPos = transform.position + centerOffset;
+            
             int index = 0;
             for (int x = 0; x < columns; x++)
             {
                 for (int y = 0; y < rows; y++)
                 {
                     Node newNode = Instantiate(nodePrefab, transform);
-                    newNode.transform.position = GetWorldPosition(x, y);
+                    newNode.transform.position = startPos + new Vector3(x * cellSize, y * cellSize, 0);
                     
                     int value = valueList[index];
                     Sprite icon = (themeData != null) ? themeData.GetSpriteById(value) : null;
@@ -162,12 +171,13 @@ namespace _Game.Scripts.Grid
 
         public Vector3 GetWorldPosition(int x, int y)
         {
-            Vector3 startPos = new Vector3(
+            Vector3 centerOffset = new Vector3(
                 -(columns * cellSize) / 2.0f + cellSize / 2,
                 -(rows * cellSize) / 2.0f + cellSize / 2,
                 0
             );
-            return new Vector3(x * cellSize, y * cellSize, 0) + startPos;
+            
+            return transform.position + centerOffset + new Vector3(x * cellSize, y * cellSize, 0);
         }
 
         private void ClearOldGrid()

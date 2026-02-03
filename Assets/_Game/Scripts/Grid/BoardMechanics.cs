@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using _Game.Scripts.Core;
 using _Game.Scripts.Utils;
 using UnityEngine;
 
@@ -73,18 +74,32 @@ namespace _Game.Scripts.Grid
         // Coroutine này sẽ được gọi sau khi ăn xong
         public IEnumerator CheckDeadlockAndShuffleRoutine(Node[,] grid, int cols, int rows)
         {
-            // Nếu vẫn còn nước đi -> Kết thúc
+            // 1. Kiểm tra nếu còn nước đi -> Thoát luôn, game chạy tiếp bình thường
             if (HasAvailableMoves(grid, cols, rows)) yield break;
 
-            // Nếu hết nước -> Shuffle liên tục đến khi có nước thì thôi
-            int maxRetries = 10;
-            do
+            // 2. NẾU HẾT NƯỚC ĐI (Deadlock)
+            Debug.Log("Hết nước đi!");
+
+            // Hỏi GameManager xem có được quyền Shuffle không?
+            // Nếu GameManager trả về True -> Trừ 1 lượt và cho phép Shuffle
+            // Nếu False -> GameManager tự gọi GameOver, mình dừng tại đây.
+            if (GameManager.Instance.TryConsumeAutoShuffle())
             {
-                ShuffleBoard(grid, cols, rows);
-                yield return new WaitForSeconds(0.5f); // Đợi visual bay về chỗ cũ
-                maxRetries--;
-            } 
-            while (!HasAvailableMoves(grid, cols, rows) && maxRetries > 0);
+                // Shuffle lại đến khi nào có nước đi thì thôi (để tránh vừa shuffle xong lại tắc tiếp thì mất oan lượt)
+                int maxRetries = 10;
+                do
+                {
+                    ShuffleBoard(grid, cols, rows);
+                    yield return new WaitForSeconds(0.5f); // Đợi hiệu ứng bay
+                    maxRetries--;
+                } 
+                while (!HasAvailableMoves(grid, cols, rows) && maxRetries > 0);
+            }
+            else
+            {
+                // Không còn lượt shuffle -> Dừng mọi thứ (GameManager đã lo việc GameOver)
+                yield break;
+            }
         }
 
         private bool HasAvailableMoves(Node[,] grid, int cols, int rows)
