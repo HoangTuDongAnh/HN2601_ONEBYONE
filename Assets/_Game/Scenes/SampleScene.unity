@@ -340,6 +340,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &646498408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 646498410}
+  - component: {fileID: 646498409}
+  m_Layer: 0
+  m_Name: '[COMBO MANAGER]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &646498409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646498408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec7bd7c207c4dbe84c65e66718a35d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Game.Scripts.Systems.ComboManager
+  comboTimeout: 4
+  baseScore: 100
+  currentCombo: 0
+  currentTimer: 0
+  currentScoreMultiplier: 1
+--- !u!4 &646498410
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646498408}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.0852, y: -1.82828, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1012642291
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,6 +399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1012642293}
   - component: {fileID: 1012642292}
+  - component: {fileID: 1012642294}
   m_Layer: 0
   m_Name: '[GRID MANAGER]'
   m_TagString: Untagged
@@ -369,10 +419,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa6ad927fcce4a7ba3e90ae0220f0754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Game.Scripts.Grid.GridManager
-  rows: 9
-  cols: 16
   nodePrefab: {fileID: 5673084897809845695, guid: cef93abb122b919488cc815f19344564, type: 3}
+  linePrefab: {fileID: 1307076692463905931, guid: 23366783792b0384095314904dbab9dc, type: 3}
+  mechanics: {fileID: 1012642294}
+  rows: 9
+  columns: 0
   cellSize: 1
+  currentGravity: 0
 --- !u!4 &1012642293
 Transform:
   m_ObjectHideFlags: 0
@@ -388,10 +441,78 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1012642294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012642291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deb98bd5ece54b82b3d27a17b58acd66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Game.Scripts.Grid.BoardMechanics
+--- !u!1 &2098624155
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2098624157}
+  - component: {fileID: 2098624156}
+  m_Layer: 0
+  m_Name: '[GAME MANAGER]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2098624156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098624155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5416d9bc9d4d6ea6c18e9a7a4bce27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Game.Scripts.Core.GameManager
+  currentTheme: {fileID: 11400000, guid: f40ac8f27f39761458c941b91f334a25, type: 2}
+  levels:
+  - {fileID: 11400000, guid: ab2ff1f9caa6c1c4897938571db5f3f7, type: 2}
+  - {fileID: 11400000, guid: 3e1024e26d406d34b9da8eec89e48f1e, type: 2}
+  - {fileID: 11400000, guid: 3de32993891335546b503e4f94cd6299, type: 2}
+  isPlaying: 0
+  currentLevelIndex: 1
+  timeRemaining: 0
+  totalScore: 0
+  pairsRemaining: 0
+--- !u!4 &2098624157
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098624155}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.0852, y: -1.82828, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 619394802}
+  - {fileID: 2098624157}
   - {fileID: 1012642293}
+  - {fileID: 646498410}
