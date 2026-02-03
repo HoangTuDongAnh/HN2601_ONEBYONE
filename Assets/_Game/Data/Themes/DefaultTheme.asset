@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 348ad6715c8c41f789698a8faef31146, type: 3}
+  m_Name: DefaultTheme
+  m_EditorClassIdentifier: Assembly-CSharp::_Game.Scripts.ScriptableObjects.ThemeData
+  icons: []
+  backgroundSprite: {fileID: 0}
