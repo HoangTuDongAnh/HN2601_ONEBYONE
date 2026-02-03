@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using _Game.Scripts.Core;
 using _Game.Scripts.ScriptableObjects;
 using _Game.Scripts.Utils;
 using UnityEngine;
@@ -142,7 +143,9 @@ namespace _Game.Scripts.Grid
             node1.gameObject.SetActive(false);
             node2.gameObject.SetActive(false);
             _selectedNode = null;
-
+            
+            GameManager.Instance.OnPairMatched();
+            
             yield return null;
 
             // --- GỌI MECHANICS ĐỂ XỬ LÝ DỒN & CHECK BÀI ---
