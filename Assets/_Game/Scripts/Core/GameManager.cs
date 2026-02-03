@@ -107,10 +107,10 @@ namespace _Game.Scripts.Core
             }
         }
         
-        public void OnPairMatched()
+        public void OnPairMatched(Vector3 matchPosition)
         {
             // 1. Gọi Combo
-            ComboManager.Instance.AddCombo();
+            ComboManager.Instance.AddCombo(matchPosition);
 
             // 2. Trừ số cặp còn lại
             pairsRemaining--;

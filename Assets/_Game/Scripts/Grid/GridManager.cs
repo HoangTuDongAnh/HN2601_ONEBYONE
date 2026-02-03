@@ -153,7 +153,9 @@ namespace _Game.Scripts.Grid
             node2.gameObject.SetActive(false);
             _selectedNode = null;
             
-            GameManager.Instance.OnPairMatched();
+            Vector3 centerPos = (node1.transform.position + node2.transform.position) / 2f;
+            
+            GameManager.Instance.OnPairMatched(centerPos);
             
             yield return null;
 
