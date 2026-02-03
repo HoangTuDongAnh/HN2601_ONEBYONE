@@ -15,6 +15,9 @@ namespace _Game.Scripts.Grid
         public Node nodePrefab;
         public float cellSize = 1.1f;
 
+        [Header("Visuals")]
+        public LineRenderer linePrefab;
+        
         [Header("Debug")] 
         public Node[,] grid;
         
@@ -122,16 +125,12 @@ namespace _Game.Scripts.Grid
             {
                 Debug.Log("MATCH THÀNH CÔNG!");
                 
-                // Xử lý ăn điểm
-                _selectedNode.isMatched = true;
-                clickedNode.isMatched = true;
-                
-                // Ẩn 2 ô đi (hoặc Destroy tùy bạn, tạm thời tắt Text)
-                _selectedNode.gameObject.SetActive(false); 
-                clickedNode.gameObject.SetActive(false);
-
-                // Reset
-                _selectedNode = null;
+                StartCoroutine(HandleMatchRoutine(_selectedNode, clickedNode, path));
+    
+                // Lưu ý: Đừng gán _selectedNode = null ở đây ngay, hãy để Coroutine lo việc đó
+                // Tuy nhiên để tránh người chơi click tiếp trong 0.3s này, 
+                // bạn nên xóa tham chiếu tạm thời ở UI (bỏ highlight)
+                _selectedNode.SetSelected(false);
             }
             else
             {
@@ -227,6 +226,52 @@ namespace _Game.Scripts.Grid
             }
 
             return null; 
+        }
+        
+        // Coroutine để vẽ đường, đợi, rồi mới xóa
+        private System.Collections.IEnumerator HandleMatchRoutine(Node node1, Node node2, List<Vector2Int> path)
+        {
+            // 1. Khóa người chơi lại (không cho click lung tung khi đang ăn)
+            // Tạm thời bạn có thể thêm 1 biến bool isProcessingMatch ở đầu class để chặn input nếu muốn.
+    
+            // 2. Tạo đường kẻ
+            LineRenderer line = Instantiate(linePrefab);
+            line.positionCount = path.Count;
+
+            // Chuyển đổi tọa độ Grid (Vector2Int) sang World Position (Vector3)
+            for (int i = 0; i < path.Count; i++)
+            {
+                Vector2Int gridPos = path[i];
+        
+                // Tính toán lại vị trí world giống như lúc Spawn Grid
+                // LƯU Ý: Bạn cần đảm bảo công thức này khớp với công thức trong GenerateGrid
+                Vector3 startPosOffset = new Vector3(
+                    -(cols * cellSize) / 2.0f + cellSize / 2,
+                    -(rows * cellSize) / 2.0f + cellSize / 2,
+                    0
+                );
+                Vector3 worldPos = new Vector3(gridPos.x * cellSize, gridPos.y * cellSize, 0) + startPosOffset;
+        
+                // Đẩy Z lên -1 hoặc -2 để chắc chắn nó nằm đè lên trên các ô
+                worldPos.z = -1f; 
+        
+                line.SetPosition(i, worldPos);
+            }
+
+            // 3. Đợi 0.3 giây
+            yield return new WaitForSeconds(0.3f);
+
+            // 4. Xóa đường kẻ và Ẩn 2 ô
+            Destroy(line.gameObject);
+    
+            node1.isMatched = true;
+            node2.isMatched = true;
+    
+            node1.gameObject.SetActive(false);
+            node2.gameObject.SetActive(false);
+
+            // Reset biến chọn
+            _selectedNode = null;
         }
         #endregion
     }
